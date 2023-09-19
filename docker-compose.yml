@@ -5,9 +5,11 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile.local
-    restart: on-failure
+    restart: unless-stopped
     networks:
       - go-api-network
+    ports:
+      - 3000:3000
 
 volumes:
   postgres:
