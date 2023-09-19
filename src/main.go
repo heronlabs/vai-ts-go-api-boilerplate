@@ -1,18 +1,22 @@
 package main
 
 import (
+	"errors"
 	"fmt"
-	app "hello-world/src/application/api"
+	"hello-world/src/application/api"
 	config "hello-world/src/application/configuration"
+	"log"
 	"net/http"
 )
 
 func main() {
 	config := config.BootstrapConfig()
 
-	app.BootstrapApp()
+	api.BootstrapApp()
 
 	fmt.Println("Server listen on port:", config.ApiPort)
 
-	http.ListenAndServe(fmt.Sprintf(":%d", config.ApiPort), nil)
+	if err := http.ListenAndServe(fmt.Sprintf(":%d", config.ApiPort), nil); !errors.Is(err, http.ErrServerClosed) {
+		log.Fatalf("HTTP server error: %v", err)
+	}
 }

@@ -1,4 +1,4 @@
-package app
+package api
 
 import (
 	"fmt"
@@ -10,5 +10,5 @@ func BootstrapApp() {
 	http.HandleFunc("/", healthCheckController.GetIndex)
 	http.HandleFunc("/webhook", healthCheckController.PostWebHook)
 
-	fmt.Println("Bootstrap app")
+	fmt.Println("Bootstrap api")
 }
