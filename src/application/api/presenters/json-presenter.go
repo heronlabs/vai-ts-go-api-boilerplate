@@ -11,17 +11,12 @@ type JsonPresenter struct {
 
 func Envelope(payload JsonPresenter, w http.ResponseWriter, r *http.Request) {
 
-	jsonData, err := json.Marshal(payload)
-	if err != nil {
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
-	}
+	jsonData, _ := json.Marshal(payload)
 
 	w.Header().Set("Content-Type", "application/json")
 
-	_, err = w.Write(jsonData)
+	_, err := w.Write(jsonData)
 	if err != nil {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
 	}
 }
