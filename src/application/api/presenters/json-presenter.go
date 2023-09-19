@@ -9,7 +9,19 @@ type JsonPresenter struct {
 	Payload any `json:"payload"`
 }
 
-func Envelope(payload JsonPresenter, w http.ResponseWriter, r *http.Request) []byte {
-	jsonData, _ := json.Marshal(payload)
-	return jsonData
+func Envelope(payload JsonPresenter, w http.ResponseWriter, r *http.Request) {
+
+	jsonData, err := json.Marshal(payload)
+	if err != nil {
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+
+	_, err = w.Write(jsonData)
+	if err != nil {
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
 }

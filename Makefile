@@ -14,7 +14,7 @@ test-coverage:
 	go tool cover -html ./coverage/coverage.txt
 
 lint: 
-	golangci-lint run ./src
+	golangci-lint run ./src/*.go
 
 script-run: 
 	go run ./src/main.go
