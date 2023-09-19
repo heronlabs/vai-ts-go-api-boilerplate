@@ -6,13 +6,13 @@ import (
 )
 
 func DecodeBody(w http.ResponseWriter, r *http.Request) any {
-	var p any
+	var body any
 
-	err := json.NewDecoder(r.Body).Decode(&p)
+	err := json.NewDecoder(r.Body).Decode(&body)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return nil
 	}
 
-	return p
+	return body
 }

@@ -4,6 +4,15 @@ download:
 build: 
 	rm -rf bin && go build -o ./bin/ ./src/*.go
 
+test:
+	go test -v ./tests/*.go
+
+test-coverage:
+	rm -rf coverage
+	mkdir coverage
+	go test -v ./tests/*.go  -coverpkg=./src/... -coverprofile ./coverage/coverage.txt
+	go tool cover -html ./coverage/coverage.txt
+
 lint: 
 	golangci-lint run ./src
 

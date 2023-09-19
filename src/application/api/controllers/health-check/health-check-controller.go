@@ -12,11 +12,12 @@ func GetIndex(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	message := presenters.JsonPresenter{
+	response := presenters.JsonPresenter{
 		Payload: "Server running!",
 	}
 
-	presenters.Envelope(message, w, r)
+	presenters.Envelope(response, w, r)
+
 }
 
 func PostWebHook(w http.ResponseWriter, r *http.Request) {
@@ -26,9 +27,6 @@ func PostWebHook(w http.ResponseWriter, r *http.Request) {
 	}
 
 	content := presenters.DecodeBody(w, r)
-	if content == nil {
-		return
-	}
 
 	response := presenters.JsonPresenter{
 		Payload: healthCheckRes.WebHookModel{
