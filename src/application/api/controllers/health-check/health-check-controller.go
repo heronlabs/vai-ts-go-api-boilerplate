@@ -16,8 +16,11 @@ func GetIndex(w http.ResponseWriter, r *http.Request) {
 		Payload: "Server running!",
 	}
 
-	presenters.Envelope(response, w, r)
+	jsonData := presenters.Envelope(response, w, r)
 
+	w.Header().Set("Content-Type", "application/json")
+
+	w.Write(jsonData)
 }
 
 func PostWebHook(w http.ResponseWriter, r *http.Request) {
@@ -35,5 +38,9 @@ func PostWebHook(w http.ResponseWriter, r *http.Request) {
 		},
 	}
 
-	presenters.Envelope(response, w, r)
+	jsonData := presenters.Envelope(response, w, r)
+
+	w.Header().Set("Content-Type", "application/json")
+
+	w.Write(jsonData)
 }
