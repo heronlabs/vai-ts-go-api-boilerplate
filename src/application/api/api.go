@@ -2,7 +2,7 @@ package api
 
 import (
 	"fmt"
-	healthCheckController "hello-world/src/application/api/controllers/health-check"
+	healthCheckController "go-api-boilerplate/src/application/api/controllers/health-check"
 
 	"github.com/gin-gonic/gin"
 )

@@ -1,7 +1,7 @@
 package healthCheckController
 
 import (
-	"hello-world/src/application/api/presenters"
+	"go-api-boilerplate/src/application/api/presenters"
 
 	"github.com/gin-gonic/gin"
 )

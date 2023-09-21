@@ -1,9 +1,9 @@
 package main
 
 import (
-	"hello-world/src/application/api"
-	"hello-world/src/application/config"
-	"hello-world/src/application/server"
+	"go-api-boilerplate/src/application/api"
+	"go-api-boilerplate/src/application/config"
+	"go-api-boilerplate/src/application/server"
 
 	"github.com/gin-gonic/gin"
 )

@@ -2,7 +2,7 @@ package config
 
 import (
 	"fmt"
-	config "hello-world/src/application/config/models"
+	config "go-api-boilerplate/src/application/config/models"
 	"os"
 )
 

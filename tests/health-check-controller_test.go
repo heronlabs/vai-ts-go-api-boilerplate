@@ -3,8 +3,8 @@ package healthCheckController
 import (
 	"bytes"
 	"encoding/json"
-	healthCheckController "hello-world/src/application/api/controllers/health-check"
-	"hello-world/src/application/api/presenters"
+	healthCheckController "go-api-boilerplate/src/application/api/controllers/health-check"
+	"go-api-boilerplate/src/application/api/presenters"
 	"net/http"
 	"net/http/httptest"
 	"testing"
