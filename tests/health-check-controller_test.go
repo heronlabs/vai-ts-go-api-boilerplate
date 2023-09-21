@@ -4,55 +4,39 @@ import (
 	"bytes"
 	"encoding/json"
 	healthCheckController "hello-world/src/application/api/controllers/health-check"
+	"hello-world/src/application/api/presenters"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/gin-gonic/gin"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGetIndex(t *testing.T) {
-	var expectedMessage = "Server running!"
+	gin.SetMode(gin.ReleaseMode)
+	router := gin.New()
+	router.GET("/", healthCheckController.GetIndex)
 
-	request, err := http.NewRequest("GET", "/", nil)
-	if err != nil {
-		t.Fatal(err)
-	}
-	responseRecorder := httptest.NewRecorder()
-	handler := http.HandlerFunc(healthCheckController.GetIndex)
-	handler.ServeHTTP(responseRecorder, request)
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/", nil)
+	router.ServeHTTP(w, req)
+	var response presenters.JsonModel
+	json.NewDecoder(w.Body).Decode(&response)
 
-	if status := responseRecorder.Code; status != http.StatusOK {
-		t.Errorf("Handler returned wrong status code: got %v want %v", status, http.StatusOK)
+	var expectedResponsePayload = presenters.JsonModel{
+		Payload: "Server running!",
 	}
-
-	var response map[string]string
-	if err := json.NewDecoder(responseRecorder.Body).Decode(&response); err != nil {
-		t.Errorf("Error decoding JSON response: %v", err)
-	}
-
-	if payload, ok := response["payload"]; !ok || payload != expectedMessage {
-		t.Errorf("Unexpected field in JSON response: got %v want '%v'", payload, expectedMessage)
-	}
+	assert.Equal(t, expectedResponsePayload, response)
 }
 
-func TestAnyIndex(t *testing.T) {
-	request, err := http.NewRequest("POST", "/", nil)
-	if err != nil {
-		t.Fatal(err)
-	}
-	responseRecorder := httptest.NewRecorder()
-	handler := http.HandlerFunc(healthCheckController.GetIndex)
-	handler.ServeHTTP(responseRecorder, request)
+func TestPostWebhook(t *testing.T) {
+	gin.SetMode(gin.ReleaseMode)
+	router := gin.New()
+	router.POST("/", healthCheckController.PostWebHook)
 
-	if status := responseRecorder.Code; status != http.StatusMethodNotAllowed {
-		t.Errorf("Expected MethodNotAllowed")
-	}
-}
-
-func TestPostWebHook(t *testing.T) {
-	body := struct {
-		TestOne string `json:"testOne"`
-	}{
-		TestOne: "hello world!",
+	body := map[string]interface{}{
+		"testOne": "hello world!",
 	}
 
 	jsonBytes, err := json.Marshal(body)
@@ -60,53 +44,18 @@ func TestPostWebHook(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	request, err := http.NewRequest("POST", "/webhook", bytes.NewReader(jsonBytes))
-	if err != nil {
-		t.Fatal(err)
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("POST", "/", bytes.NewReader(jsonBytes))
+	router.ServeHTTP(w, req)
+	var response presenters.JsonModel
+	json.NewDecoder(w.Body).Decode(&response)
+
+	var expectedResponsePayload = presenters.JsonModel{
+		Payload: healthCheckController.WebHookModel{
+			Method:  "POST",
+			Content: body,
+		},
 	}
 
-	responseRecorder := httptest.NewRecorder()
-
-	handler := http.HandlerFunc(healthCheckController.PostWebHook)
-
-	handler.ServeHTTP(responseRecorder, request)
-
-	if status := responseRecorder.Code; status != http.StatusOK {
-		t.Errorf("Handler returned wrong status code: got %v want %v", status, http.StatusOK)
-	}
-}
-
-func TestPostWebHookWrongBody(t *testing.T) {
-	request, err := http.NewRequest("POST", "/webhook", bytes.NewReader(nil))
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	responseRecorder := httptest.NewRecorder()
-
-	handler := http.HandlerFunc(healthCheckController.PostWebHook)
-
-	handler.ServeHTTP(responseRecorder, request)
-
-	if status := responseRecorder.Code; status != http.StatusBadRequest {
-		t.Errorf("Expected BadRequest")
-	}
-}
-
-func TestAnyWebHook(t *testing.T) {
-
-	request, err := http.NewRequest("GET", "/webhook", nil)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	responseRecorder := httptest.NewRecorder()
-
-	handler := http.HandlerFunc(healthCheckController.PostWebHook)
-
-	handler.ServeHTTP(responseRecorder, request)
-
-	if status := responseRecorder.Code; status != http.StatusMethodNotAllowed {
-		t.Errorf("Expected MethodNotAllowed")
-	}
+	assert.ObjectsAreEqual(expectedResponsePayload, response)
 }

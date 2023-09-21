@@ -1,22 +1,16 @@
 package main
 
 import (
-	"errors"
-	"fmt"
 	"hello-world/src/application/api"
-	config "hello-world/src/application/configuration"
-	"log"
-	"net/http"
+	"hello-world/src/application/config"
+	"hello-world/src/application/server"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	config := config.BootstrapConfig()
-
-	api.BootstrapApp()
-
-	fmt.Println("Server listen on port:", config.ApiPort)
-
-	if err := http.ListenAndServe(fmt.Sprintf(":%d", config.ApiPort), nil); !errors.Is(err, http.ErrServerClosed) {
-		log.Fatalf("HTTP server error: %v", err)
-	}
+	config := config.Config()
+	ginApp := gin.Default()
+	api.Api(ginApp)
+	server.Server(config.ApiPort, ginApp)
 }

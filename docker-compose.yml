@@ -8,8 +8,11 @@ services:
     restart: unless-stopped
     networks:
       - go-api-network
+    environment:
+      API_PORT: 5555
+      GIN_MODE: release
     ports:
-      - 3000:3000
+      - 5555:5555
 
 volumes:
   postgres:

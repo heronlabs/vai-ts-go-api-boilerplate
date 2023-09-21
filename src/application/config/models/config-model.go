@@ -1,5 +1,5 @@
 package config
 
 type ConfigModel struct {
-	ApiPort int `json:"apiPort"`
+	ApiPort string `json:"apiPort"`
 }

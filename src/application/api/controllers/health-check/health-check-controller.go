@@ -1,38 +1,23 @@
 package healthCheckController
 
 import (
-	healthCheckRes "hello-world/src/application/api/controllers/health-check/res"
 	"hello-world/src/application/api/presenters"
-	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
-func GetIndex(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "GET" {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
+func GetIndex(ctx *gin.Context) {
+	response := presenters.Envelope("Server running!")
 
-	response := presenters.JsonPresenter{
-		Payload: "Server running!",
-	}
-
-	presenters.Envelope(response, w, r)
+	ctx.JSON(200, response)
 }
 
-func PostWebHook(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "POST" {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
+func PostWebHook(ctx *gin.Context) {
+	var req WebHookModel
+	req.Method = "POST"
+	ctx.BindJSON(&req.Content)
 
-	content := presenters.DecodeBody(w, r)
+	response := presenters.Envelope(req)
 
-	response := presenters.JsonPresenter{
-		Payload: healthCheckRes.WebHookModel{
-			Method:  r.Method,
-			Content: content,
-		},
-	}
-
-	presenters.Envelope(response, w, r)
+	ctx.JSON(200, response)
 }
