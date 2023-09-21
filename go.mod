@@ -1,4 +1,4 @@
-module hello-world
+module go-api-boilerplate
 
 go 1.21.1
 
