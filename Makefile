@@ -16,13 +16,13 @@ test-coverage:
 lint: 
 	golangci-lint run ./src/...
 
-script-run: 
+api-run: 
 	go run ./src/main.go
 
 docker-build: 
 	docker build -t go-api:latest . -f Dockerfile.local
 
-docker-up-script: 
+docker-up-api: 
 	docker-compose up -d go-api --build --force-recreate
 
 docker-down: 
