@@ -11,7 +11,7 @@ test-coverage:
 	rm -rf coverage
 	mkdir coverage
 	go test -v ./tests/*.go  -coverpkg=./src/... -coverprofile ./coverage/coverage.txt
-	go tool cover -html ./coverage/coverage.txt
+	go tool cover -html ./coverage/coverage.txt -o ./coverage/coverage.html
 
 lint: 
 	golangci-lint run ./src/...
