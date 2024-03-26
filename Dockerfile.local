@@ -6,6 +6,4 @@ COPY . .
 
 RUN make download && make build
 
-EXPOSE 3000
-
 ENTRYPOINT ["/app/bin/main"]

@@ -14,10 +14,6 @@ services:
     ports:
       - 5555:5555
 
-volumes:
-  postgres:
-
-
 networks:
   go-api-network:
     name: go-api
